@@ -16,22 +16,69 @@ class Graph {
   }
 
   // this function accepts an array of Node instances and adds them to the nodes property on the graph
-  addVertices(vertexArray) {}
+  addVertices(vertexArray) {
+    for (let node of vertexArray) {
+      this.nodes.add(node);
+    }
+  }
 
   // this function accepts two vertices and updates their adjacent values to include the other vertex
-  addEdge(v1, v2) {}
+  addEdge(v1, v2) {
+    v1.adjacent.add(v2);
+    v2.adjacent.add(v1);
+  }
 
   // this function accepts two vertices and updates their adjacent values to remove the other vertex
-  removeEdge(v1, v2) {}
+  removeEdge(v1, v2) {
+    v1.adjacent.delete(v2);
+    v2.adjacent.delete(v1);
+  }
 
   // this function accepts a vertex and removes it from the nodes property, it also updates any adjacency lists that include that vertex
-  removeVertex(vertex) {}
+  removeVertex(vertex) {
+    this.nodes.delete(vertex);
+    for (let node of vertex.adjacent) {
+      node.adjacent.delete(vertex);
+    }
+  }
 
   // this function returns an array of Node values using DFS
-  depthFirstSearch(start) {}
+  depthFirstSearch(start) {
+    let toVisitStack = [start];
+    let seen = new Set(toVisitStack);
+    let values = [];
+    while (toVisitStack.length) {
+      let curr = toVisitStack.pop();
+      values.push(curr.value);
+
+      for (let adj of curr.adjacent) {
+        if (!seen.has(adj)) {
+          toVisitStack.push(adj);
+          seen.add(adj);
+        }
+      }
+    }
+    return values;
+  }
 
   // this function returns an array of Node values using BFS
-  breadthFirstSearch(start) {}
+  breadthFirstSearch(start) {
+    let toVisitQueue = [start];
+    let seen = new Set(toVisitQueue);
+    let values = [];
+    while (toVisitQueue.length) {
+      let curr = toVisitQueue.shift();
+      values.push(curr.value);
+
+      for (let adj of curr.adjacent) {
+        if (!seen.has(adj)) {
+          toVisitQueue.push(adj);
+          seen.add(adj);
+        }
+      }
+    }
+    return values;
+  }
 }
 
 module.exports = { Graph, Node };
